@@ -1,0 +1,18 @@
+section{
+    padding: 60px 0;
+}
+
+.card {
+    overflow: hidden; /* Ensure the image does not overflow the card */
+}
+
+.card-img-container {
+height: 200px; /* Adjust the height as needed */
+overflow: hidden; /* Ensure the image does not overflow the container */
+}
+
+.card-img-top {
+object-fit: cover; /* Make the image cover the entire container while maintaining aspect ratio */
+height: 100%; /* Set the height of the image to 100% of its container */
+width: 100%; /* Set the width of the image to 100% of its container */
+}
