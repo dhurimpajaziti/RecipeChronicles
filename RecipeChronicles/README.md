@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 RecipeChronicles
 Welcome to RecipeChronicles, your go-to source for discovering and saving delicious recipes!
 
@@ -59,3 +60,6 @@ Contact
 For more information, contact RecipeChronicles at contact@recipechronicles.com.
 
 © 2023 RecipeChronicles
+=======
+# RecipeChronicles
+>>>>>>> origin/main

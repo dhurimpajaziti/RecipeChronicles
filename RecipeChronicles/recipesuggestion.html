@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggestions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+    <style>
+        .form{
+            margin-top: 150px;
+        }
+        h1{
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Recipe Chronicles</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="recipes.html">Recipes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="favorites.html">Favorites Recipes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="recipesuggestion.html">Suggestions</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">What would you like to eat?</h1>
+
+        <form id="recipeForm" class="mb-4">
+            <label for="description">Describe what you want to eat:</label>
+            <input type="text" id="description" name="description" class="form-control mb-2" required>
+            <button type="button" onclick="getRecipeSuggestions()" class="btn btn-primary">Get Suggestions</button>
+        </form>
+
+        <div id="suggestions"></div>
+    </div>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="./assets/js/helpers.js"></script>
+    <script>
+
+        const spoonacularApiKey = 'e0139c74c082422caeb7ab68cfa6aa10';
+
+        async function getRecipeSuggestions() {
+        const descriptionInput = document.getElementById('description');
+        const description = descriptionInput.value;
+
+        const keywords = extractKeywords(description);
+
+        
+        const apiUrl = `https://api.spoonacular.com/recipes/search?apiKey=${spoonacularApiKey}&query=${encodeURIComponent(keywords)}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            displaySuggestions(data.results);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        }
+
+        function displaySuggestions(suggestions) {
+            const suggestionsContainer = document.getElementById('suggestions');
+            suggestionsContainer.innerHTML = '';
+
+            if (suggestions.length === 0) {
+                suggestionsContainer.innerHTML = '<p>No suggestions found.</p>';
+            } else {
+                suggestions.forEach(recipe => {
+                    console.log('Image URL:', recipe.image);
+                    const card = document.createElement('div');
+                    card.classList.add('card', 'mb-3');
+
+                    const imageUrl = `https://spoonacular.com/recipeImages/${recipe.image}`;
+
+                    const instructions = recipe.instructions || 'No instructions available.';
+
+                    card.innerHTML = `
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="${imageUrl}" class="card-img" alt="${recipe.title}">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">${recipe.title}</h5>
+                                    <a href="recipe_details.html?id=${recipe.id}" class="btn btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    suggestionsContainer.appendChild(card);
+                });
+            }
+        }
+
+
+        function extractKeywords(input) {
+            const words = input.split(' ');
+            const relevantWords = words.filter(word => word.length > 2);
+
+            return relevantWords.join(' ');
+        }
+    </script>
+
+</body>
+</html>
